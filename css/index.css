@@ -1,0 +1,22 @@
+body{
+    background: #DFCFBE;
+}
+
+.navbar-color{
+    background: #5B5EA6;
+}
+
+.brandcolorwesh{
+    color: white;
+}
+
+.content{
+    padding: 2%;
+    min-height: 350px;
+    background: #6b6b47;
+    margin-top: 10%;
+}
+
+.content.bg-alt{
+    background: #5b5b3e;
+}

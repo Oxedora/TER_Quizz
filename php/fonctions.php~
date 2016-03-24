@@ -1,0 +1,69 @@
+<?php
+
+	/**
+	* Renvoie le contenu de la $page html
+	*
+	* $page : vue html
+	*/
+	function recupererHTML($page){
+		ob_start();
+		include($page);
+		$html = ob_get_contents();
+		ob_end_clean();
+		return $html;
+	}
+	
+	/**
+	* Remplace le contenu de la $vue par le $nouveauContenu et retourne le résultat
+	*
+	* $vue : vue html
+	* $nouveauContenu : contenu à insérer dans la vue
+	*/
+	function remplacerContenu($vue, $nouveauContenu){
+		return str_replace(array_keys($nouveauContenu), array_values($nouveauContenu), $vue);
+	}
+	
+	/**
+	* Met $_SESSION['connecte'] vrai si les identifiants sont corrects, faux sinon 
+	* et renvoie le message d'erreur.
+	*/
+	function authentification($dbh){
+		$connexionAccepte = $dbh->query("
+		SELECT pseudo 	
+		FROM user 
+		WHERE pseudo='".$_POST['login']."' 
+		AND password='".$_POST['password']."'
+		"); // $_POST contient les variables
+		$connexionAccepte = $connexionAccepte->fetch(PDO::FETCH_OBJ);
+		$_SESSION['connecte'] = $connexionAccepte != false;
+		$erreur = ($_SESSION['connecte'] ? "" : '<p class="text-danger"><b>Erreur: identifiant ou mot de passe incorrect.</b></p>');	
+		return $erreur;
+	}
+
+	/**
+	* Inscrit une personne dans la base de donnée si le pseudo est disponible, affiche un message d'erreur sinon.
+	**/
+
+	function inscription($dbh){
+		 if($_POST['npassword'] == $_POST['npasswordV']){
+		 	$pseudoDispo = $dbh->query("
+		 		SELECT pseudo
+		 		FROM user
+		 		WHERE pseudo='".$_POST['nlogin']."'
+		 		");
+		
+			$pseudoDispo = $pseudoDispo->fetch(PDO::FETCH_OBJ);
+			if($pseudoDispo == false){
+					if($dbh->query("INSERT INTO user (pseudo, password, fr_natif) VALUES ('".$_POST['nlogin']."','".$_POST['npassword']."', '1')") === FALSE){
+						return '<p class="text-danger"><b>Erreur: impossible de créer le compte.</b></p>';
+					}
+			}
+			else{
+				return '<p class="text-danger"><b>Erreur: identifiant indisponible.</b></p>';
+			}
+		 }			
+		 else{
+			return '<p class="text-danger"><b>Erreur: Les mots de passes sont différents.</b></p>';
+		 }
+	}
+?>

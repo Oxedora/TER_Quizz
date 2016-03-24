@@ -1,0 +1,17 @@
+<?php
+/**
+* Liste des requêtes pour accéder aux données de la BDD
+* Rend le code plus fluide par la suite
+* 
+* Toutes les variables utilisées viennent de $_POST
+*/
+
+// Vérification de l'authentification d'un utilisateur
+$check_authentification = "
+SELECT pseudo 
+FROM user 
+WHERE pseudo='".$_SESSION['login']."' 
+	AND password='".$_SESSION['password']."'
+";
+
+?>

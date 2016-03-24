@@ -1,0 +1,34 @@
+<?php
+session_start();
+
+include_once("fonctions.php"); // Fonctions auxiliaires
+
+/* Déclaration des variables pour cette page */
+$navbar		= recupererHTML("../html/navbar.html");
+$contenu	= recupererHTML("../html/questionnaires.html");
+$scripts	= "";
+$accueilActif 	= "";
+$questActif	= 'class="active"';
+$statActif	= "";
+$deconnexion	= ($_SESSION['connecte'] ? '<ul class="nav navbar-nav navbar-right"><li><a href="../php/deconnexion.php">Deconnexion</a></li></ul>' : '');
+
+/* Stockage de la vue à charger dans un buffer */
+$html = recupererHTML("../main.html");
+
+/* Initialisation du tableau pour le remplacement */
+$remplacement = array(
+'%navbar%'		=> $navbar,
+'%contenu%' 		=> $contenu,
+'%scripts%'		=> $scripts,
+'%accueilActif%'	=> $accueilActif,
+'%questActif%'		=> $questActif,
+'%statActif%'		=> $statActif,
+'%deconnexion%' 	=> $deconnexion
+);
+
+/* Remplacement des variables de la vue par les données de la page */ 
+$html = remplacerContenu($html, $remplacement);
+
+echo $html;
+
+?>

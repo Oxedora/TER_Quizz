@@ -1,0 +1,110 @@
+<div class="container">
+  
+  <div class="jumbotron content">
+
+    <h1>Bienvenue</h1>
+    <p>Bonjour et bienvenue sur le site de questionnaires crée dans le cadre de notre TER de troisième année de Licence.</p>
+    <p>Votre connexion a été traitée ; vous pouvez maintenant procéder aux tests.</p>
+    <p>Vous pourrez consulter les statistiques après avoir complété chaque test.</p>
+    <p>J'attire votre attention sur les champs ci-dessous. Vous pourrez y modifier vos informations personnelles.</p>
+    <p>Bonne navigation.</p>
+  </div>
+
+  <div class="row jumbotron content bg-alt">
+
+    <!--Modif mdp-->
+    <div class="col-sm-4 ">
+
+      <h2>Modifier mot de passe</h2>
+
+      <form>
+
+        <div class="form-group">
+
+          <label for="oldInputMdp">Ancien mot de passe</label>
+          <input type="password" class="form-control" id="oldInputMdp" placeholder="Password">
+
+        </div>
+
+        <div class="form-group">
+          <label for="inputPassword">Nouveau mot de passe</label>
+          <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+        </div>
+
+        <div class="form-group">
+          <label for="inputPassword">Confirmer nouveau mot de passe</label>
+          <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Modifier</button>
+
+      </form>
+
+    </div><!--fin mdp-->
+
+
+    <!--Modif mail-->
+    <div class="col-sm-4">
+
+      <form>
+
+	<h2>Modifier Email</h2>
+
+	<div class="form-group">
+
+	  <label for="inputEmail">Email</label>
+	  <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+
+	  <div class="form-group">
+            <label for="inputPassword">Mot de passe</label>
+            <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+	  </div>
+
+	  <button type="submit" class="btn btn-primary">Modifier</button>
+
+	</div><!--Fin pseudo-->
+
+      </form>
+
+    </div><!--Fin row-->
+
+    <div class="col-sm-4">
+
+      <form>
+
+	<h2>Informations personnelles</h2>
+	
+	<div class="form-group">
+	  
+	  <label for="genreSelect">Genre</label>
+	  <select id="genreSelect">
+	    <option value="" %selGNull%></option>
+	    <option value="homme" %selGHom%>Homme</option>
+	    <option value="femme" %selGFem%>Femme</option>
+	  </select> 
+	  
+	  <div class="form-group">
+            <label for="infoProf">Profession</label>
+            <input type="text" class="form-control" id="infoProf" value=%infoProf%>
+	  </div>
+	  
+	  <div class="checkbox">
+            <label><input type="checkbox" name="infoFr" %infoFr%> <b>Français natif</b></label>
+          </div>
+	  
+	  <div class="form-group">
+            <label for="inputPassword">Mot de passe</label>
+            <input type="password" class="form-control" id="infoPassword" placeholder="Password" required>
+	  </div>
+	  
+	  <button type="submit" class="btn btn-primary">Modifier</button>
+
+	  %erreurModif%
+	  
+	</div><!--Fin info-->
+
+      </form>
+
+    </div><!--Fin row-->
+
+  </div><!--Fin container-->
