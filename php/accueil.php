@@ -28,22 +28,22 @@ $html = recupererHTML("../main.html");
 
 /* Initialisation du tableau pour le remplacement */
 $remplacement = array(
-'%navbar%'		=> recupererHTML("../html/navbar.html"),
-'%contenu%' 		=> ($_SESSION['connecte'] ? recupererHTML("../html/compte.html") : recupererHTML("../html/accueil.html")),
-'%scripts%'		=> "",
-'%accueilActif%'	=> 'class="active"',
-'%questActif%'		=> "",
-'%statActif%'		=> "",
-'%deconnexion%' 	=> ($_SESSION['connecte'] ? '<ul class="nav navbar-nav navbar-right"><li><a href="../php/deconnexion.php">Deconnexion</a></li></ul>' : ''),
-'%erreurCo%'		=> $erreurCo,
-'%erreurCrea%'		=> $erreurCrea,
-'%erreurModif%'		=> $erreurModif,
-'%selGNull%'		=> (!isset($infos_user->genre) ? "selected" : ""),
-'%selGHom%'		=> ($infos_user->genre == "homme" ? "selected" : ""),
-'%selGFem%'		=> ($infos_user->genre == "femme" ? "selected" : ""),
-'%infoProf%'		=> ( isset($infos_user->profession) ? $infos_user->profession : ""),
-'%infoFr%'		=> ( $infos_user->fr_natif ? "checked" : "")
-);
+	'%navbar%'		=> recupererHTML("../html/navbar.html"),
+	'%contenu%' 		=> ($_SESSION['connecte'] ? recupererHTML("../html/compte.html") : recupererHTML("../html/accueil.html")),
+	'%scripts%'		=> "",
+	'%accueilActif%'	=> 'class="active"',
+	'%questActif%'		=> "",
+	'%statActif%'		=> "",
+	'%deconnexion%' 	=> ($_SESSION['connecte'] ? '<ul class="nav navbar-nav navbar-right"><li><a href="../php/deconnexion.php">Deconnexion</a></li></ul>' : ''),
+	'%erreurCo%'		=> $erreurCo,
+	'%erreurCrea%'		=> $erreurCrea,
+	'%erreurModif%'		=> $erreurModif,
+	'%selGNull%'		=> (!isset($infos_user->genre) ? "selected" : ""),
+	'%selGHom%'		=> ($infos_user->genre == "homme" ? "selected" : ""),
+	'%selGFem%'		=> ($infos_user->genre == "femme" ? "selected" : ""),
+	'%infoProf%'		=> ( isset($infos_user->profession) ? "value='".$infos_user->profession."'" : ""),
+	'%infoFr%'		=> ( $infos_user->fr_natif ? 'checked' : '')
+	);
 
 /* Remplacement des variables de la vue par les données de la page */ 
 $html = remplacerContenu($html, $remplacement);

@@ -88,8 +88,6 @@ function getInfosUser($dbh){
 * Modifie les champs renseignés de l'utilisateur
 */
 function modifInfoUser($dbh){
-	var_dump($_SESSION);
-	var_dump($_POST);
 	$verifCompte = $dbh->query("
 		SELECT pseudo
 		FROM user
@@ -100,11 +98,13 @@ function modifInfoUser($dbh){
 	$verifCompte = $verifCompte->fetch(PDO::FETCH_OBJ);
 
 	if($verifCompte != false){
-		$fr_natif = (isset($_POST['infoFr']) ? 1 : 0);
-
+		$fr_natif = (isset($_POST['infoFr']) ? true : false);
+		
 		$dbh->query("UPDATE user SET genre='".$_POST['infoGenre']."',
-					professsion='".$_POST['infoProf']."',
-					fr_natif='".$fr_natif."'");
+			profession='".$_POST['infoProf']."',
+			fr_natif=".$fr_natif."
+			WHERE pseudo='".$_SESSION['pseudo']."'");
+			
 	}
 	else{
 		return '<p class="text-danger"><b>Erreur: Mot de passe incorrect.</b></p>';
