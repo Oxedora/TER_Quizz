@@ -98,12 +98,12 @@ function modifInfoUser($dbh){
 	$verifCompte = $verifCompte->fetch(PDO::FETCH_OBJ);
 
 	if($verifCompte != false){
-		$fr_natif = (isset($_POST['infoFr']) ? true : false);
-		
-		$dbh->query("UPDATE user SET genre='".$_POST['infoGenre']."',
+		var_dump($fr_natif = ($_POST['infoFr'] == "true" ? 1 : 0));
+		var_dump($_POST);
+		var_dump($dbh->query("UPDATE user SET genre='".$_POST['infoGenre']."',
 			profession='".$_POST['infoProf']."',
 			fr_natif=".$fr_natif."
-			WHERE pseudo='".$_SESSION['pseudo']."'");
+			WHERE pseudo='".$_SESSION['pseudo']."'"));
 			
 	}
 	else{

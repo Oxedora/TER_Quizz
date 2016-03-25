@@ -48,63 +48,65 @@
 
       <form method="post">
 
-       <h2>Modifier Email</h2>
+	<h2>Modifier Email</h2>
 
-       <div class="form-group">
+	<div class="form-group">
 
-         <label for="inputEmail">Email</label>
-         <input type="email" class="form-control" id="inputEmail" placeholder="Email" required>
+          <label for="inputEmail">Email</label>
+          <input type="email" class="form-control" id="inputEmail" placeholder="Email" required>
 
-         <div class="form-group">
-          <label for="inputPassword">Mot de passe</label>
-          <input type="password" class="form-control" id="inputPassword" placeholder="Password" pattern=".{6,}" required>
-        </div>
+          <div class="form-group">
+            <label for="inputPassword">Mot de passe</label>
+            <input type="password" class="form-control" id="inputPassword" placeholder="Password" pattern=".{6,}" required>
+          </div>
 
-        <button type="submit" class="btn btn-primary">Modifier</button>
+          <button type="submit" class="btn btn-primary">Modifier</button>
 
-      </div><!--Fin pseudo-->
+	</div><!--Fin pseudo-->
 
-    </form>
+      </form>
 
-  </div><!--Fin row-->
+    </div><!--Fin row-->
 
-  <div class="col-sm-4">
+    <div class="col-sm-4">
 
-    <form method="post">
+      <form method="post">
 
-     <h2>Informations personnelles</h2>
+	<h2>Informations personnelles</h2>
 
-     <div class="form-group">
+	<div class="form-group">
 
-       <label for="genreSelect">Genre</label>
-       <select id="genreSelect" name="infoGenre">
-         <option value="" %selGNull%></option>
-         <option value="homme" %selGHom%>Homme</option>
-         <option value="femme" %selGFem%>Femme</option>
-       </select> 
+	  <label for="genreSelect">Genre</label>
+	  <select id="genreSelect" name="infoGenre">
+            <option value="" %selGNull%></option>
+            <option value="homme" %selGHom%>Homme</option>
+            <option value="femme" %selGFem%>Femme</option>
+	  </select> 
 
-       <div class="form-group">
-        <label for="Prof">Profession</label>
-        <input type="text" class="form-control" id="Prof" name="infoProf" %infoProf%>
-      </div>
+	  <div class="form-group">
+            <label for="Prof">Profession</label>
+            <input type="text" class="form-control" id="Prof" name="infoProf" %infoProf%>
+	  </div>
 
-      <div class="checkbox">
-        <label for="fr_nat"><input type="checkbox" id="fr_nat" name="infoFr" %infoFr%><b>Français natif</b></label>
-      </div>
+	  <div class="form-group">
+	    <label for="frRadio">Français natif ?</label>
+	    <input id="frRadio" type="radio" name="infoFr" value="true" %infoFrT%><b>Oui</b>
+	    <input id="frRadio" type="radio" name="infoFr" value="false"%infoFrF%><b>Non</b>
+	  </div>
 
-      <div class="form-group">
-        <label for="Password">Mot de passe</label>
-        <input type="password" class="form-control" id="Password" name="infoPassword" placeholder="Password" pattern=".{6,}" required>
-      </div>
+	  <div class="form-group">
+            <label for="Password">Mot de passe</label>
+            <input type="password" class="form-control" id="Password" name="infoPassword" placeholder="Password" pattern=".{6,}" required>
+	  </div>
 
-      <button type="submit" class="btn btn-primary">Modifier</button>
+	  <button type="submit" class="btn btn-primary">Modifier</button>
 
-      %erreurModif%
+	  %erreurModif%
 
-    </div><!--Fin info-->
+	</div><!--Fin info-->
 
-  </form>
+      </form>
 
-</div><!--Fin row-->
+    </div><!--Fin row-->
 
-</div><!--Fin container-->
+  </div><!--Fin container-->

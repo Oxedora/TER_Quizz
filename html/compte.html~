@@ -1,9 +1,9 @@
 <div class="container">
-  
+
   <div class="jumbotron content">
 
     <h1>Bienvenue</h1>
-    <p>Bonjour et bienvenue sur le site de questionnaires crée dans le cadre de notre TER de troisième année de Licence.</p>
+    <p>Bonjour et bienvenue sur le site de questionnaires crée dans le cadre d'un TER de troisième année de Licence.</p>
     <p>Votre connexion a été traitée ; vous pouvez maintenant procéder aux tests.</p>
     <p>Vous pourrez consulter les statistiques après avoir complété chaque test.</p>
     <p>J'attire votre attention sur les champs ci-dessous. Vous pourrez y modifier vos informations personnelles.</p>
@@ -17,23 +17,23 @@
 
       <h2>Modifier mot de passe</h2>
 
-      <form>
+      <form method="post">
 
         <div class="form-group">
 
           <label for="oldInputMdp">Ancien mot de passe</label>
-          <input type="password" class="form-control" id="oldInputMdp" placeholder="Password">
+          <input type="password" class="form-control" id="oldInputMdp" placeholder="Password" pattern=".{6,}" required>
 
         </div>
 
         <div class="form-group">
           <label for="inputPassword">Nouveau mot de passe</label>
-          <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+          <input type="password" class="form-control" id="inputPassword" placeholder="Password" pattern=".{6,}" required>
         </div>
 
         <div class="form-group">
           <label for="inputPassword">Confirmer nouveau mot de passe</label>
-          <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+          <input type="password" class="form-control" id="inputPassword" placeholder="Password" pattern=".{6,}" required>
         </div>
 
         <button type="submit" class="btn btn-primary">Modifier</button>
@@ -46,65 +46,65 @@
     <!--Modif mail-->
     <div class="col-sm-4">
 
-      <form>
+      <form method="post">
 
-	<h2>Modifier Email</h2>
+       <h2>Modifier Email</h2>
 
-	<div class="form-group">
+       <div class="form-group">
 
-	  <label for="inputEmail">Email</label>
-	  <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+         <label for="inputEmail">Email</label>
+         <input type="email" class="form-control" id="inputEmail" placeholder="Email" required>
 
-	  <div class="form-group">
-            <label for="inputPassword">Mot de passe</label>
-            <input type="password" class="form-control" id="inputPassword" placeholder="Password">
-	  </div>
+         <div class="form-group">
+          <label for="inputPassword">Mot de passe</label>
+          <input type="password" class="form-control" id="inputPassword" placeholder="Password" pattern=".{6,}" required>
+        </div>
 
-	  <button type="submit" class="btn btn-primary">Modifier</button>
+        <button type="submit" class="btn btn-primary">Modifier</button>
 
-	</div><!--Fin pseudo-->
+      </div><!--Fin pseudo-->
 
-      </form>
+    </form>
 
-    </div><!--Fin row-->
+  </div><!--Fin row-->
 
-    <div class="col-sm-4">
+  <div class="col-sm-4">
 
-      <form>
+    <form method="post">
 
-	<h2>Informations personnelles</h2>
-	
-	<div class="form-group">
-	  
-	  <label for="genreSelect">Genre</label>
-	  <select id="genreSelect">
-	    <option value="" %selGNull%></option>
-	    <option value="homme" %selGHom%>Homme</option>
-	    <option value="femme" %selGFem%>Femme</option>
-	  </select> 
-	  
-	  <div class="form-group">
-            <label for="infoProf">Profession</label>
-            <input type="text" class="form-control" id="infoProf" value=%infoProf%>
-	  </div>
-	  
-	  <div class="checkbox">
-            <label><input type="checkbox" name="infoFr" %infoFr%> <b>Français natif</b></label>
-          </div>
-	  
-	  <div class="form-group">
-            <label for="inputPassword">Mot de passe</label>
-            <input type="password" class="form-control" id="infoPassword" placeholder="Password" required>
-	  </div>
-	  
-	  <button type="submit" class="btn btn-primary">Modifier</button>
+     <h2>Informations personnelles</h2>
 
-	  %erreurModif%
-	  
-	</div><!--Fin info-->
+     <div class="form-group">
 
-      </form>
+       <label for="genreSelect">Genre</label>
+       <select id="genreSelect" name="infoGenre">
+         <option value="" %selGNull%></option>
+         <option value="homme" %selGHom%>Homme</option>
+         <option value="femme" %selGFem%>Femme</option>
+       </select> 
 
-    </div><!--Fin row-->
+       <div class="form-group">
+        <label for="Prof">Profession</label>
+        <input type="text" class="form-control" id="Prof" name="infoProf" %infoProf%>
+      </div>
 
-  </div><!--Fin container-->
+      <div class="checkbox">
+        <label for="fr_nat"><input type="checkbox" id="fr_nat" name="infoFr" %infoFr%><b>Français natif</b></label>
+      </div>
+
+      <div class="form-group">
+        <label for="Password">Mot de passe</label>
+        <input type="password" class="form-control" id="Password" name="infoPassword" placeholder="Password" pattern=".{6,}" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Modifier</button>
+
+      %erreurModif%
+
+    </div><!--Fin info-->
+
+  </form>
+
+</div><!--Fin row-->
+
+</div><!--Fin container-->

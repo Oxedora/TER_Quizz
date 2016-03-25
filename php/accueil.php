@@ -42,7 +42,8 @@ $remplacement = array(
 	'%selGHom%'		=> ($infos_user->genre == "homme" ? "selected" : ""),
 	'%selGFem%'		=> ($infos_user->genre == "femme" ? "selected" : ""),
 	'%infoProf%'		=> ( isset($infos_user->profession) ? "value='".$infos_user->profession."'" : ""),
-	'%infoFr%'		=> ( $infos_user->fr_natif ? 'checked' : '')
+	'%infoFrT%'		=> ( $infos_user->fr_natif ? 'checked' : ''),
+	'%infoFrF%'		=> ( !$infos_user->fr_natif ? 'checked' : '')
 	);
 
 /* Remplacement des variables de la vue par les données de la page */ 

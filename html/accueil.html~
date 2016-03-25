@@ -35,18 +35,22 @@
 	  
 	  <div class="form-group">
 	    <label for="inputPseudo">Pseudo</label>
-	    <input name="nlogin" type="text" class="form-control" id="inputPseudo" placeholder="Pseudo" required>
+	    <input name="nlogin" type="text" class="form-control" id="inputPseudo" placeholder="Pseudo" pattern=".{3,}" required>
 	  </div>
 	  
 	  <div class="form-group">
 	    <label for="inputPassword">Mot de passe</label>
-	    <input name="npassword" type="password" class="form-control" id="inputPassword" placeholder="Password" required>
+	    <input name="npassword" type="password" class="form-control" id="inputPassword" placeholder="Password" pattern=".{6,}" required>
 	  </div>
 	  
 	  <div class="form-group">
 	    <label for="inputPassword">Répetez votre mot de passe</label>
-	    <input name="npasswordV" type="password" class="form-control" id="inputPassword" placeholder="Password" required>
+	    <input name="npasswordV" type="password" class="form-control" id="inputPassword" placeholder="Password" pattern=".{6,}" required>
 	  </div>
+
+	  <div class="checkbox">
+            <label><input type="checkbox" name="fr_check" checked> <b>Français natif ?</b></label>
+          </div>
 	  
 	  <button type="submit" class="btn btn-primary">Créer</button>
 	  %erreurCrea%

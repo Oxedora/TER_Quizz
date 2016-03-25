@@ -48,10 +48,12 @@
 	    <input name="npasswordV" type="password" class="form-control" id="inputPassword" placeholder="Password" pattern=".{6,}" required>
 	  </div>
 
-	  <div class="checkbox">
-            <label><input type="checkbox" name="fr_check" checked> <b>Français natif ?</b></label>
-          </div>
-	  
+	  <div class="form-group">
+	    <label for="frRadio">Français natif ?</label>
+	    <input id="frRadio" type="radio" name="infoFr" value="true" checked><b>Oui</b>
+	    <input id="frRadio" type="radio" name="infoFr" value="false"><b>Non</b>
+	 </div>
+
 	  <button type="submit" class="btn btn-primary">Créer</button>
 	  %erreurCrea%
 	</form>
