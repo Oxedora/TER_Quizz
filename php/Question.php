@@ -8,8 +8,10 @@ class Question{
     protected $reponse_donnee;
     protected $temp_reponse;
     protected $bdd;
+	protected $pseudo;
     
     function __construct($pseudo){
+		$this->pseudo = $pseudo;
         $this->enonce_question = array();
         $this->enonce_reponse = array();
         $this->reponse_donnee = array();
@@ -105,6 +107,36 @@ class Question{
         echo "<input type='submit'>";
         echo "</form>";
     }
+	
+	public function enregistrerReponses(){
+		
+		//on récupère l'id de la réponse
+		if($POST['question'] == 'Vrai'){
+			foreach($this->enonce_reponse as $value){
+				if ($value['contenu'] == 'Vrai'){
+					$rep = $value['id'];
+				}
+			}
+		}
+		else{
+			foreach($this->enonce_reponse as $value){
+				if ($value['contenu'] == 'Faux'){
+					$rep = $value['id'];
+				}
+			}
+		}
+		
+		//insertion dans reponse
+		$insertrep = $this->bdd->exec('INSERT INTO reponses (pseudo_user, temps_reponse) VALUES ("'.$this->pseudo.'", "'$this->temp_reponse'");');
+		
+		//on doit récupérer l'id de l'entrée précédente dans la table réponse
+		$requeteID = $this->bdd->query('SELECT id FROM reponses WHERE pseudo_user="'.$this->pseudo.'" ORDER BY id DESC LIMIT 1;');
+		$data = $requeteID->fetch(PDO::FETCH_ASSOC);
+		$requeteID->closeCursor();
+		
+		//insertion dans reponse_donnee
+		$insertreps = $this->bdd->exec('INSERT INTO reponse_donnee (id_reponses, id_enonce_reponse, ordre) VALUES ("'$data['id']'", "'$rep'", "'NULL'");');
+	}
 }
 
 ?>
