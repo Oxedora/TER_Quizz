@@ -10,6 +10,29 @@ class Question implements Serializable{
     protected $bdd;
 	protected $pseudo;
     
+	public function serialize() {
+		return serialize(array("id"=>$this->id, "ordonne"=>$this->ordonne, "enonce_question"=>$this->enonce_question, "enonce_reponse"=>$this->enonce_reponse, "reponse_donnee"=>$this->reponse_donnee, "temp_reponse"=>$this->temp_reponse, "pseudo"=>$this->pseudo));
+	}
+	public function unserialize($data) {
+		$temp = unserialize($data);
+		$this->id = $temp["id"];
+		$this->ordonne = $temp["ordonne"];
+		$this->enonce_question = $temp["enonce_question"];
+		$this->enonce_reponse = $temp["enonce_reponse"];
+		$this->reponse_donne = $temp["reponse_donne"];
+		$this->temp_reponse = $temp["temp_reponse"];
+		$this->pseudo = $temp["pseudo"];
+		
+		try{
+            $this->bdd = new PDO('mysql:host=localhost;dbname=slyntcom_projet', 'slyntcom_projet', 'projet-um',array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+        }
+        catch( PDOException $Exception ) {
+            //rediriger vers une page erreur
+            echo "la connection à la bdd a échoué";
+            exit();
+        }
+	}
+	
     function __construct($pseudo){
 		$this->pseudo = $pseudo;
         $this->enonce_question = array();
@@ -37,7 +60,8 @@ class Question implements Serializable{
         if($data === false){
             //rediriger vers stats ?
             echo "vous avez répondu à toutes nos questions";
-            exit();
+			$_SESSION["nbQuestionRestantes"] = 0;
+			header($_SERVER['PHP_SELF']);
         }
         
         //on récuper l'id de la question et le paramètre ordonne
@@ -108,17 +132,20 @@ class Question implements Serializable{
         echo "</form>";
 		
 		//gestion du chrono
-		echo "tempsMax = 10;" //voir comment gérer le temps max par question selon le type de question;
-		echo "<script>window.onload = DemarrerChrono();</script>"
+		echo "tempsMax = 10;"; //voir comment gérer le temps max par question selon le type de question;
+		echo "<script>window.onload = DemarrerChrono();</script>";
 		$_SESSION["question"] = serialize($this);
     }
 	
 	public function enregistrerReponses(){
-		
+		$rep;
 		//on récupère l'id de la réponse
 		if($POST['question'] == 'Vrai'){
+			echo "1";
 			foreach($this->enonce_reponse as $value){
+				
 				if ($value['contenu'] == 'Vrai'){
+					echo "2";
 					$rep = $value['id'];
 				}
 			}
@@ -132,7 +159,7 @@ class Question implements Serializable{
 		}
 		
 		//insertion dans reponse
-		$insertrep = $this->bdd->exec('INSERT INTO reponses (pseudo_user, temps_reponse) VALUES ("'.$this->pseudo.'", "'$this->temp_reponse'");');
+		$insertrep = $this->bdd->exec('INSERT INTO reponses (pseudo_user, temps_reponse) VALUES ("'.$this->pseudo.'", "'.$this->temp_reponse.'");');
 		
 		//on doit récupérer l'id de l'entrée précédente dans la table réponse
 		$requeteID = $this->bdd->query('SELECT id FROM reponses WHERE pseudo_user="'.$this->pseudo.'" ORDER BY id DESC LIMIT 1;');
@@ -140,7 +167,7 @@ class Question implements Serializable{
 		$requeteID->closeCursor();
 		
 		//insertion dans reponse_donnee
-		$insertreps = $this->bdd->exec('INSERT INTO reponse_donnee (id_reponses, id_enonce_reponse, ordre) VALUES ("'$data['id']'", "'$rep'", "'NULL'");');
+		$insertreps = $this->bdd->exec('INSERT INTO reponse_donnee (id_reponses, id_enonce_reponse, ordre) VALUES ("'.$data['id'].'", "'.$rep.'", "'.NULL.'");');
 	}
 }
 
