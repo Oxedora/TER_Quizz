@@ -106,6 +106,10 @@ class Question{
         }
         echo "<input type='submit'>";
         echo "</form>";
+		
+		//gestion du chrono
+		echo "tempsMax = 10;" //voir comment gérer le temps max par question selon le type de question;
+		echo "<script>window.onload = DemarrerChrono();</script>"
     }
 	
 	public function enregistrerReponses(){

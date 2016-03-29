@@ -15,3 +15,26 @@ function changeBox(idBox, idContent, type) {
         }
     }
 }
+
+var timer;
+var time = 0;
+var tempsMax;
+
+function Minuteur() {
+	if (tempsMax === time) {
+		document.formulaire.submit();
+	}
+}
+
+function Chrono() {
+	time += 1;
+	Minuteur();
+}
+
+function DemarrerChrono() {
+	timer = setInterval(Chrono, 1000);
+}
+
+function ArreterChrono() {
+	clearInterval(timer);
+}
