@@ -1,6 +1,6 @@
 <?php
 
-class Question{
+class Question implements Serializable{
     protected $id;
     protected $ordonne;
     protected $enonce_question;
@@ -110,6 +110,7 @@ class Question{
 		//gestion du chrono
 		echo "tempsMax = 10;" //voir comment gérer le temps max par question selon le type de question;
 		echo "<script>window.onload = DemarrerChrono();</script>"
+		$_SESSION["question"] = serialize($this);
     }
 	
 	public function enregistrerReponses(){
