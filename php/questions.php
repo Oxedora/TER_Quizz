@@ -8,7 +8,7 @@
     <center>
         <section>
             <?php
-				$pseudo = "patate";
+				$pseudo = "testChrono3";
 				include "Question.php";
 				if (isset($_SESSION["question"])){
 					$q = unserialize($_SESSION["question"]);
@@ -27,7 +27,6 @@
 				}
 				else{
 					$_SESSION["nbQuestionRestantes"] = 1; //nombre de question par série (initialisation)
-					
 					$q = new Question($pseudo);//pseudo utilisateur
 					$_SESSION["nbQuestionRestantes"]--;
                 	$q->afficheQ();

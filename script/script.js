@@ -22,7 +22,7 @@ var tempsMax;
 
 function Minuteur() {
 	if (tempsMax === time) {
-		document.formulaire.submit();
+		document.getElementsByName("subbut")[0].form.submit();
 	}
 }
 
@@ -32,9 +32,13 @@ function Chrono() {
 }
 
 function DemarrerChrono() {
-	timer = setInterval(Chrono, 1000);
+	timer = setInterval(Chrono, tempsMax);
 }
 
 function ArreterChrono() {
 	clearInterval(timer);
+}
+
+function ChronoInInput() {
+	document.getElementsByName("temps")[0].setAttribute("value", time); 
 }

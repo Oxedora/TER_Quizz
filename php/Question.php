@@ -2,7 +2,7 @@
 
 class Question implements Serializable{
     protected $id;
-    protected $ordonne;
+    protected $type_question;
     protected $enonce_question;
     protected $enonce_reponse;
     protected $reponse_donnee;
@@ -11,12 +11,12 @@ class Question implements Serializable{
 	protected $pseudo;
     
 	public function serialize() {
-		return serialize(array("id"=>$this->id, "ordonne"=>$this->ordonne, "enonce_question"=>$this->enonce_question, "enonce_reponse"=>$this->enonce_reponse, "reponse_donnee"=>$this->reponse_donnee, "temp_reponse"=>$this->temp_reponse, "pseudo"=>$this->pseudo));
+		return serialize(array("id"=>$this->id, "type_question"=>$this->type_question, "enonce_question"=>$this->enonce_question, "enonce_reponse"=>$this->enonce_reponse, "reponse_donnee"=>$this->reponse_donnee, "temp_reponse"=>$this->temp_reponse, "pseudo"=>$this->pseudo));
 	}
 	public function unserialize($data) {
 		$temp = unserialize($data);
 		$this->id = $temp["id"];
-		$this->ordonne = $temp["ordonne"];
+		$this->type_question = $temp["type_question"];
 		$this->enonce_question = $temp["enonce_question"];
 		$this->enonce_reponse = $temp["enonce_reponse"];
 		$this->reponse_donne = $temp["reponse_donne"];
@@ -66,22 +66,21 @@ class Question implements Serializable{
         
         //on récuper l'id de la question et le paramètre ordonne
         $this->id = $data['id'];
-        $this->ordonne = $data['ordonne'];
-        
+        $this->type_question = $data['type_question'];
+		
         //on récupère les énoncés de la question trouvée plus haut
         $enonce = $this->bdd->query('SELECT * FROM enonce_question WHERE id_question="'.$this->id.'"');
                
         while ($data = $enonce->fetch(PDO::FETCH_ASSOC)){
-            array_push($this->enonce_question,array($data['id'],$data['type_contenu'],$data['contenu']));
+            array_push($this->enonce_question,array("id" => $data['id'],"type_contenu" => $data['type_contenu'],"contenu" => $data['contenu']));
         }
         $enonce->closeCursor();
         
         //on récupère les énoncés de réponse de la question trouvée plus haut
         $enonceRep = $this->bdd->query('SELECT * FROM enonce_reponse WHERE id_question="'.$this->id.'"');
                
-        while ($data = $enonceRep->fetch(PDO::FETCH_ASSOC))
-        {
-            array_push($this->enonce_reponse,array($data['id'],$data['type_contenu'],$data['contenu']));
+        while ($data = $enonceRep->fetch(PDO::FETCH_ASSOC)){
+            array_push($this->enonce_reponse,array("id" => $data['id'],"type_contenu" => $data['type_contenu'],"contenu" => $data['contenu']));
         }
         $enonce->closeCursor();        
     }
@@ -102,64 +101,53 @@ class Question implements Serializable{
         return $this->enonce_reponse;
     }
     
-    public function setReponse($reponses){
-        $this->reponse_donnee = $reponses;
-    }
-    
     public function setTempsReponse($temps){
         $this->temps_reponse = $temps;
     }
     
     public function afficheQ(){
         foreach($this->enonce_question as $value){
-            if($value[1]==="texte"){
-                echo "<p class='enonce'>".$value[2]."</p></br>";
+            if($value["type_contenu"]==="texte"){
+                echo "<p class='enonce'>".$value["contenu"]."</p></br>";
             }
-            else if($value[1]==="image"){
-                echo "<img class='enonce' src=".$value[2]."></br>";
+            else if($value["type_contenu"]==="image"){
+                echo "<img class='enonce' src=".$value["contenu"]."></br>";
             }
         }
-        echo "<form method='post' action=''>";
+		
+		//gestion du chrono
+		//voir comment gérer le temps max par question selon le type de question;
+		echo "<script>tempsMax = 1000;
+		window.onload = DemarrerChrono();
+		</script>";
+		
+        echo "<form method='post' action='' onsubmit='ArreterChrono(); ChronoInInput()'>";
+		echo "<input type='hidden' name='temps' value='0'>";
         foreach ($this->enonce_reponse as $value){
-            if($value[1]==="texte"){
-                echo "<input type='radio' name='question' value=".$value[2].">".$value[2]."</br>";
+            if($value["type_contenu"]==="texte"){
+                echo "<input type='radio' name='question' value=".$value["contenu"]." checked>".$value["contenu"]."</br>";
             }
             else{
                 //gérer les images
             }
         }
-        echo "<input type='submit'>";
+        echo "<input name='subbut' type='submit'>";
         echo "</form>";
 		
-		//gestion du chrono
-		echo "tempsMax = 10;"; //voir comment gérer le temps max par question selon le type de question;
-		echo "<script>window.onload = DemarrerChrono();</script>";
 		$_SESSION["question"] = serialize($this);
     }
 	
 	public function enregistrerReponses(){
 		$rep;
 		//on récupère l'id de la réponse
-		if($POST['question'] == 'Vrai'){
-			echo "1";
-			foreach($this->enonce_reponse as $value){
-				
-				if ($value['contenu'] == 'Vrai'){
-					echo "2";
-					$rep = $value['id'];
-				}
-			}
-		}
-		else{
-			foreach($this->enonce_reponse as $value){
-				if ($value['contenu'] == 'Faux'){
-					$rep = $value['id'];
-				}
+		foreach($this->enonce_reponse as $value){
+			if($_POST['question'] == $value['contenu']){		
+				$rep = $value['id'];
 			}
 		}
 		
 		//insertion dans reponse
-		$insertrep = $this->bdd->exec('INSERT INTO reponses (pseudo_user, temps_reponse) VALUES ("'.$this->pseudo.'", "'.$this->temp_reponse.'");');
+		$insertrep = $this->bdd->exec('INSERT INTO reponses (pseudo_user, temps_reponse) VALUES ("'.$this->pseudo.'", "'.$_POST["temps"].'");');
 		
 		//on doit récupérer l'id de l'entrée précédente dans la table réponse
 		$requeteID = $this->bdd->query('SELECT id FROM reponses WHERE pseudo_user="'.$this->pseudo.'" ORDER BY id DESC LIMIT 1;');
