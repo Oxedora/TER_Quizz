@@ -50,8 +50,10 @@ class Question implements Serializable{
         }
         
         //selection d'une seule question non répondue par $pseudo
-        $question = $this->bdd->query('SELECT * FROM question WHERE id IN (
-            SELECT distinct id FROM reponses WHERE pseudo_user!="'.$pseudo.'") LIMIT 1;');
+        $requete = 'SELECT * FROM question WHERE id IN (SELECT distinct id FROM reponses WHERE pseudo_user!= :pseudo) LIMIT 1;';
+        $question = $this->bdd->prepare($requete);
+        $question->bindValue(':pseudo',$this->pseudo,PDO::PARAM_STR);
+        $question->execute();
         
         $data = $question->fetch(PDO::FETCH_ASSOC);
         $question->closeCursor();
@@ -61,7 +63,6 @@ class Question implements Serializable{
             //rediriger vers stats ?
             echo "vous avez répondu à toutes nos questions";
 			$_SESSION["nbQuestionRestantes"] = 0;
-			header($_SERVER['PHP_SELF']);
         }
         
         //on récuper l'id de la question et le paramètre ordonne
@@ -69,7 +70,10 @@ class Question implements Serializable{
         $this->type_question = $data['type_question'];
 		
         //on récupère les énoncés de la question trouvée plus haut
-        $enonce = $this->bdd->query('SELECT * FROM enonce_question WHERE id_question="'.$this->id.'"');
+        $requete = 'SELECT * FROM enonce_question WHERE id_question= :q_id';
+        $enonce = $this->bdd->prepare($requete);
+        $enonce->bindValue(':q_id',$this->id,PDO::PARAM_INT);
+        $enonce->execute();
                
         while ($data = $enonce->fetch(PDO::FETCH_ASSOC)){
             array_push($this->enonce_question,array("id" => $data['id'],"type_contenu" => $data['type_contenu'],"contenu" => $data['contenu']));
@@ -77,7 +81,10 @@ class Question implements Serializable{
         $enonce->closeCursor();
         
         //on récupère les énoncés de réponse de la question trouvée plus haut
-        $enonceRep = $this->bdd->query('SELECT * FROM enonce_reponse WHERE id_question="'.$this->id.'"');
+        $requete = 'SELECT * FROM enonce_reponse WHERE id_question= :q_id';
+        $enonceRep = $this->bdd->prepare($requete);
+        $enonceRep->bindValue(':q_id',$this->id,PDO::PARAM_INT);
+        $enonceRep->execute();
                
         while ($data = $enonceRep->fetch(PDO::FETCH_ASSOC)){
             array_push($this->enonce_reponse,array("id" => $data['id'],"type_contenu" => $data['type_contenu'],"contenu" => $data['contenu']));
@@ -147,15 +154,28 @@ class Question implements Serializable{
 		}
 		
 		//insertion dans reponse
-		$insertrep = $this->bdd->exec('INSERT INTO reponses (pseudo_user, temps_reponse) VALUES ("'.$this->pseudo.'", "'.$_POST["temps"].'");');
+        $requete = 'INSERT INTO reponses (pseudo_user, temps_reponse) VALUES (:pseudo, :temps);';
+        $insertrep = $this->bdd->prepare($requete);
+        $insertrep->bindValue(':pseudo',$this->pseudo,PDO::PARAM_STR);
+        $insertrep->bindValue(':temps',$_POST["temps"],PDO::PARAM_INT);
+		$insertrep->execute();
 		
 		//on doit récupérer l'id de l'entrée précédente dans la table réponse
-		$requeteID = $this->bdd->query('SELECT id FROM reponses WHERE pseudo_user="'.$this->pseudo.'" ORDER BY id DESC LIMIT 1;');
+        $requete = 'SELECT id FROM reponses WHERE pseudo_user= :pseudo ORDER BY id DESC LIMIT 1;';
+		$requeteID = $this->bdd->prepare($requete);
+        $requeteID->bindValue(':pseudo',$this->pseudo,PDO::PARAM_STR);
+        $requeteID->execute(); 
+        
 		$data = $requeteID->fetch(PDO::FETCH_ASSOC);
 		$requeteID->closeCursor();
 		
 		//insertion dans reponse_donnee
-		$insertreps = $this->bdd->exec('INSERT INTO reponse_donnee (id_reponses, id_enonce_reponse, ordre) VALUES ("'.$data['id'].'", "'.$rep.'", "'.NULL.'");');
+        $requete = 'INSERT INTO reponse_donnee (id_reponses, id_enonce_reponse, ordre) VALUES (:id_q, :id_rep, :ordonne);';
+        $insertreps = $this->bdd->prepare($requete);
+        $insertreps->bindValue(':id_q',$this->id,PDO::PARAM_INT);
+        $insertreps->bindValue(':id_rep',$rep,PDO::PARAM_INT);
+        $insertreps->bindValue(':ordonne',NULL,PDO::PARAM_INT);//NULL dans ce type de question
+        $insertreps->execute(); 
 	}
 }
 
