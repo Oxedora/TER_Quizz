@@ -10,8 +10,8 @@
             <?php
 				if (!isset($_SESSION['connecte']) || $_SESSION['connecte'] == false){// si non connecté
 					// rediriger vers la page de connection
-					header('refresh: 5; Location: accueil.php');
-					echo "Vous allez être redirigé vers l'accueil pour vous connecter ou vous inscrire.";
+					echo "Veuillez aller sur la page d'accueil pour vous connecter ou vous inscrire.";
+					exit;
 				}
 				$pseudo = $_SESSION['pseudo'];
 				if (!isset($_SESSION["nbQuestionRestantes"])){// on initialise le nombre de question pour la série

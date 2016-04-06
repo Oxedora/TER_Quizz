@@ -115,7 +115,7 @@ class Question implements Serializable{
 		window.onload = DemarrerChrono();
 		</script>";
 		
-        echo "<form method='post' action='' onsubmit='ArreterChrono(); ChronoInInput()'>";
+        echo "<form method='post' action='".$_SERVER['PHP_SELF']."' onsubmit='ArreterChrono(); ChronoInInput()'>";
 		echo "<input type='hidden' name='temps' value='0'>";
         foreach ($this->enonce_reponse as $value){
             if($value["type_contenu"]==="texte"){
@@ -167,41 +167,52 @@ class Question implements Serializable{
 }
 
 function mainQuestionnaire(){
+	echo "<script src='../script/script.js'></script>";
 	if (!isset($_SESSION['connecte']) || $_SESSION['connecte'] == false){// si non connecté
-	// rediriger vers la page de connection
-		header('refresh: 5; Location: accueil.php');
-		echo "Vous allez être redirigé vers l'accueil pour vous connecter ou vous inscrire.";
+		// rediriger vers la page de connection
+		echo "Veuillez vous rendre sur la page d'accueil pour vous connecter ou vous inscrire.";
 	}
-	$pseudo = $_SESSION['pseudo'];
-	if (!isset($_SESSION["nbQuestionRestantes"])){// on initialise le nombre de question pour la série
-		$_SESSION["nbQuestionRestantes"] = 10;
-	}
-	include "Question.php";
-	while ($_SESSION["nbQuestionRestantes"] > 0) {// tant qu'il reste des questions
-		if (isset($_SESSION["question"]) & isset($_POST)){//si l'utilisateur viens de répondre
-		   $q = unserialize($_SESSION["question"]);//on récupère la question
-		   $q->enregistrerReponses();//et on met à jour la bdd
+	else{
+		$pseudo = $_SESSION['pseudo'];
+
+		if (!isset($_SESSION["nbQuestionRestantes"])){// on initialise le nombre de question pour la série
+			$_SESSION["nbQuestionRestantes"] = 10;
 		}
-		elseif (isset($_SESSION["nbQuestionRestantes"])){
-		   if($_SESSION["nbQuestionRestantes"] == 0){
-				//questionnaire fini. rediriger vers stats ?
-				header("refresh: 5; Location: statistiques.php");
-				echo "Vous avez fini le questionnaire vous allez être redirigé vers les statistiques.";
-		   }
-		   else{//on pose une question
-			  $_SESSION["nbQuestionRestantes"]--;
-			  $q = new Question($pseudo);//pseudo utilisateur
-			  if (!$q->existe()){
-				  $_SESSION["nbQuestionRestantes"] = 0;
-				  header("refresh: 5; Location: statistiques.php");
-				  echo "Vous avez répondu à toutes les questions disponibles. Vous allez être redirigé vers les statistiques.";
-			  }
-			  else{
-				$q->afficheQ();
-			  }
-		   }
+
+		while ($_SESSION["nbQuestionRestantes"] >= 0) {// tant qu'il reste des questions
+			if (isset($_SESSION["question"]) && isset($_POST)){//si l'utilisateur viens de répondre
+				$q = unserialize($_SESSION["question"]);//on récupère la question
+				$q->enregistrerReponses();//et on met à jour la bdd
+				unset($_SESSION["question"]);
+			}
+
+			elseif (isset($_SESSION["nbQuestionRestantes"])){
+
+			   if($_SESSION["nbQuestionRestantes"] == 0){
+					unset($_SESSION["nbQuestionRestantes"]);
+					//questionnaire fini. rediriger vers stats ?
+					header("refresh: 5; Location: statistiques.php");
+					echo "Vous avez fini le questionnaire vous allez être redirigé vers les statistiques.";
+			   }
+
+			   else{//on pose une question
+				  $_SESSION["nbQuestionRestantes"]--;
+				  $q = new Question($pseudo);//pseudo utilisateur
+
+				  if (!$q->existe()){
+					  unset($_SESSION["nbQuestionRestantes"]);
+					  header("refresh: 5; Location: statistiques.php");
+					  echo "Vous avez répondu à toutes les questions disponibles. Vous allez être redirigé vers les statistiques.";
+				  }
+
+				  else{
+					$q->afficheQ();
+				  }
+			   }
+			}
 		}
 	}
+	
 }
 
 ?>

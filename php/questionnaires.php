@@ -2,6 +2,7 @@
 session_start();
 
 include_once("fonctions.php"); // Fonctions auxiliaires
+include_once("Question.php");
 
 /* Stockage de la vue à charger dans un buffer */
 $html = recupererHTML("../main.html");
@@ -9,7 +10,7 @@ $html = recupererHTML("../main.html");
 /* Initialisation du tableau pour le remplacement */
 $remplacement = array(
 '%navbar%'		=> recupererHTML("../html/navbar.html"),
-'%contenu%' 		=> recupererHTML("../html/questionnaires.html"),
+'%contenu%' 		=> mainQuestionnaire(),
 '%scripts%'		=> "",
 '%accueilActif%'	=> "",
 '%questActif%'		=> 'class="active"',
