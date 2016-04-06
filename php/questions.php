@@ -8,7 +8,15 @@
     <center>
         <section>
             <?php
-				$pseudo = "testChrono3";
+				if (!isset($_SESSION['connecte']) || $_SESSION['connecte'] == false){// si non connecté
+					// rediriger vers la page de connection
+					header('refresh: 5; Location: accueil.php');
+					echo "Vous allez être redirigé vers l'accueil pour vous connecter ou vous inscrire.";
+				}
+				$pseudo = $_SESSION['pseudo'];
+				if (!isset($_SESSION["nbQuestionRestantes"])){// on initialise le nombre de question pour la série
+					$_SESSION["nbQuestionRestantes"] = 10;
+				}
 				include "Question.php";
                 while ($_SESSION["nbQuestionRestantes"] > 0) {// tant qu'il reste des questions
                     if (isset($_SESSION["question"]) & isset($_POST)){//si l'utilisateur viens de répondre
@@ -18,18 +26,21 @@
 				    elseif (isset($_SESSION["nbQuestionRestantes"])){
 					   if($_SESSION["nbQuestionRestantes"] == 0){
 				    		//questionnaire fini. rediriger vers stats ?
+						   	header("refresh: 5; Location: statistiques.php");
+							echo "Vous avez fini le questionnaire vous allez être redirigé vers les statistiques.";
 					   }
 					   else{//on pose une question
 						  $_SESSION["nbQuestionRestantes"]--;
 						  $q = new Question($pseudo);//pseudo utilisateur
-                		  $q->afficheQ();
+						  if (!$q->existe()){
+							  $_SESSION["nbQuestionRestantes"] = 0;
+							  header("refresh: 5; Location: statistiques.php");
+							  echo "Vous avez répondu à toutes les questions disponibles. Vous allez être redirigé vers les statistiques.";
+						  }
+						  else{
+                		  	$q->afficheQ();
+						  }
 					   }
-				    }
-				    else{//si le nombre de question restantes n'exite pas c'est qu'on viens ariver sur la page
-					   $_SESSION["nbQuestionRestantes"] = 1; //nombre de question par série (initialisation)
-					   $q = new Question($pseudo);//pseudo utilisateur
-					   $_SESSION["nbQuestionRestantes"]--;
-                	   $q->afficheQ();
 				    }
                 }
             ?>
