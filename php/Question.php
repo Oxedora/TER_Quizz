@@ -111,7 +111,7 @@ class Question implements Serializable{
 		
 		//gestion du chrono
 		//voir comment gérer le temps max par question selon le type de question;
-		echo "<script>tempsMax = 1000;
+		echo "<script>tempsMax = 4500;
 		window.onload = DemarrerChrono();
 		</script>";
 		
@@ -119,7 +119,7 @@ class Question implements Serializable{
 		echo "<input type='hidden' name='temps' value='0'>";
         foreach ($this->enonce_reponse as $value){
             if($value["type_contenu"]==="texte"){
-                echo "<input type='radio' name='question' value=".$value["contenu"]." checked>".$value["contenu"]."</br>";
+                echo "<input type='radio' name='question' value=".$value["contenu"].">".$value["contenu"]."</br>";
             }
             else{
                 //gérer les images
@@ -131,38 +131,47 @@ class Question implements Serializable{
 		$_SESSION["question"] = serialize($this);
     }
 	
-	public function enregistrerReponses(){
+	public function enregistrerReponses(){// fonctionne seulement pour le type_question simple (radio bouton, 1 seule réponse)
 		$rep;
 		//on récupère l'id de la réponse
 		foreach($this->enonce_reponse as $value){
 			if($_POST['question'] == $value['contenu']){		
 				$rep = $value['id'];
 			}
+		}	
+		
+		try{
+			$this->bdd->beginTransaction();
+
+			//insertion dans reponse
+			$requete = 'INSERT INTO reponses (pseudo_user, temps_reponse) VALUES (:pseudo, :temps);';
+			$insertrep = $this->bdd->prepare($requete);
+			$insertrep->bindValue(':pseudo',$this->pseudo,PDO::PARAM_STR);
+			$insertrep->bindValue(':temps',$_POST['temps'],PDO::PARAM_INT);
+			$insertrep->execute();
+
+			//on doit récupérer l'id de l'entrée précédente dans la table réponse
+			$requete = 'SELECT id FROM reponses WHERE pseudo_user= :pseudo ORDER BY id DESC LIMIT 1;';
+			$requeteID = $this->bdd->prepare($requete);
+			$requeteID->bindValue(':pseudo',$this->pseudo,PDO::PARAM_STR);
+			$requeteID->execute(); 
+
+			$data = $requeteID->fetch(PDO::FETCH_ASSOC);
+			$requeteID->closeCursor();
+
+			//insertion dans reponse_donnee
+			$requete = 'INSERT INTO reponse_donnee (id_reponses, id_enonce_reponse, ordre) VALUES (:id_q, :id_rep, :ordonne);';
+			$insertreps = $this->bdd->prepare($requete);
+			$insertreps->bindValue(':id_q',$this->id,PDO::PARAM_INT);
+			$insertreps->bindValue(':id_rep',$rep,PDO::PARAM_INT);
+			$insertreps->bindValue(':ordonne',NULL,PDO::PARAM_INT);//NULL dans ce type de question
+			$insertreps->execute();
+			
+			$this->bdd->commit();
 		}
-		
-		//insertion dans reponse
-        $requete = 'INSERT INTO reponses (pseudo_user, temps_reponse) VALUES (:pseudo, :temps);';
-        $insertrep = $this->bdd->prepare($requete);
-        $insertrep->bindValue(':pseudo',$this->pseudo,PDO::PARAM_STR);
-        $insertrep->bindValue(':temps',$_POST["temps"],PDO::PARAM_INT);
-		$insertrep->execute();
-		
-		//on doit récupérer l'id de l'entrée précédente dans la table réponse
-        $requete = 'SELECT id FROM reponses WHERE pseudo_user= :pseudo ORDER BY id DESC LIMIT 1;';
-		$requeteID = $this->bdd->prepare($requete);
-        $requeteID->bindValue(':pseudo',$this->pseudo,PDO::PARAM_STR);
-        $requeteID->execute(); 
-        
-		$data = $requeteID->fetch(PDO::FETCH_ASSOC);
-		$requeteID->closeCursor();
-		
-		//insertion dans reponse_donnee
-        $requete = 'INSERT INTO reponse_donnee (id_reponses, id_enonce_reponse, ordre) VALUES (:id_q, :id_rep, :ordonne);';
-        $insertreps = $this->bdd->prepare($requete);
-        $insertreps->bindValue(':id_q',$this->id,PDO::PARAM_INT);
-        $insertreps->bindValue(':id_rep',$rep,PDO::PARAM_INT);
-        $insertreps->bindValue(':ordonne',NULL,PDO::PARAM_INT);//NULL dans ce type de question
-        $insertreps->execute(); 
+		catch(PDOException $Exception){
+			$this->bdd->rollBack();
+		}
 	}
 }
 
